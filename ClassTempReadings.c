@@ -1,7 +1,8 @@
 #include <stdio.h>
-#include <wiringPi.h>
+#include <unistd.h>
+#include <pigpio.h>
 
-#define LED_PIN 0
+#define PIN 4
 
 int main() {
     int temp;
@@ -9,13 +10,11 @@ int main() {
     int count = 0;
     int minTemp;
     int maxTemp;
-
-    if (wiringPiSetup() == -1) {
-        printf("Error initializing WiringPi.\n");
-        return 1;
-    }
-    pinMode(LED_PIN, OUTPUT);
-    digitalWrite(LED_PIN, LOW);
+    
+    gpioInitialise();
+    
+    gpioSetMode(PIN, PI_OUTPUT);
+    gpioWrite(PIN, 0);
     
     FILE *file = fopen("classroom_temps.txt", "w");
     if (file == NULL) {
@@ -48,18 +47,18 @@ int main() {
         if (temp >= minTemp && temp <= maxTemp) {
             printf("Status: Normal\n\n");
             fprintf(file, "Temperature: %dF | Status: Normal\n", temp);
-            digitalWrite(LED_PIN, LOW);
+            gpioWrite(PIN, 0);
         } else {
             printf("Status: Warning\n\n");
             fprintf(file, "Temperature: %dF | Status: Warning\n", temp);
-            digitalWrite(LED_PIN, HIGH);
+            gpioWrite(PIN, 1);
         }
 
         sum += temp;
         count++;
     }
 
-    digitalWrite(LED_PIN, LOW);
+    gpioWrite(PIN, 0);
 
     if (count > 0) {
         double average = (double)sum / count;
