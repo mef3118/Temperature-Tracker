@@ -1,0 +1,8 @@
+Acceptable Temperature Range: 68F - 76F
+--------------------------------------------
+Temperature: 68F | Status: Normal
+Temperature: 73F | Status: Normal
+Temperature: 75F | Status: Normal
+--------------------------------------------
+Total temperatures entered: 3
+Average classroom temperature: 72.00F
